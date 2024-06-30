@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { fetchWeather, addCity, setCurrentCity } from "@/features/weather/weatherSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchWeather } from "@/features/weather/weatherSlice";
 import {
   Combobox,
   ComboboxButton,
@@ -10,37 +10,21 @@ import {
 } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { classNames } from "@/helpers/utils";
+import { City } from "@/features/cities/citiesTypes";
+import { RootState } from "@/store/store";
+import { setCurrentCity } from "@/features/cities/citiesSlice";
 
-interface City {
-  value: string;
-  name: string;
-}
-
-const cities: City[] = [
-  {
-    value: "moscow",
-    name: "Москва",
-  },
-  {
-    value: "spb",
-    name: "Санкт-Петербург",
-  },
-  {
-    value: "tula",
-    name: "Тула",
-  },
-  {
-    value: "kovrov",
-    name: "Ковров",
-  },
-  {
-    value: "ulianosk",
-    name: "Ульяновск",
-  },
-];
+const geocodeCoordinates = async (lat: number, lon: number) => {
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`,
+  );
+  const data = await response.json();
+  return data.address.city;
+};
 
 export const CitySelector = () => {
-  const [activeCity, setActiveCity] = useState<City | null>(null);
+  const cities = useSelector((state: RootState) => state.cities.cities);
+  const activeCity = useSelector((state: RootState) => state.cities.currentCity);
   const [query, setQuery] = useState("");
   const dispatch = useDispatch<any>();
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -48,7 +32,6 @@ export const CitySelector = () => {
   const handleAddCity = useCallback(
     (city: City) => {
       if (city) {
-        dispatch(addCity(city.name));
         dispatch(setCurrentCity(city.name));
         dispatch(fetchWeather(city.name));
         localStorage.setItem("selectedCity", JSON.stringify(city));
@@ -61,11 +44,32 @@ export const CitySelector = () => {
     const savedCity = localStorage.getItem("selectedCity");
     if (savedCity) {
       const parsedCity: City = JSON.parse(savedCity);
-      setActiveCity(parsedCity);
+      dispatch(setCurrentCity(parsedCity.name));
       dispatch(setCurrentCity(parsedCity.name));
     } else {
-      setActiveCity(cities[0]);
-      dispatch(setCurrentCity(cities[0].name));
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const cityName = await geocodeCoordinates(
+            position.coords.latitude,
+            position.coords.longitude,
+          );
+          const foundCity = cities.find(
+            (city) => city.name.toLowerCase() === cityName.toLowerCase(),
+          );
+          if (foundCity) {
+            dispatch(setCurrentCity(foundCity.name));
+            dispatch(setCurrentCity(foundCity.name));
+          } else {
+            dispatch(setCurrentCity(cities[0].name));
+            dispatch(setCurrentCity(cities[0].name));
+          }
+        },
+        (error) => {
+          console.error(error);
+          dispatch(setCurrentCity(cities[0].name));
+          dispatch(setCurrentCity(cities[0].name));
+        },
+      );
     }
   }, [dispatch]);
 
@@ -74,7 +78,8 @@ export const CitySelector = () => {
       if (isFirstLoad) {
         setIsFirstLoad(false);
       } else {
-        handleAddCity(activeCity);
+        const activeCityObj = cities.find((city) => city.name === activeCity);
+        if (activeCityObj) handleAddCity(activeCityObj);
       }
     }
   }, [activeCity, handleAddCity, isFirstLoad]);
@@ -93,7 +98,7 @@ export const CitySelector = () => {
       onChange={(city) => {
         setQuery("");
         if (city) {
-          setActiveCity(city);
+          dispatch(setCurrentCity(city));
         }
       }}
     >
@@ -102,7 +107,7 @@ export const CitySelector = () => {
           className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
           onChange={(event) => setQuery(event.target.value)}
           onBlur={() => setQuery("")}
-          displayValue={(city: City) => city?.name}
+          displayValue={(city: string) => city}
         />
         <ComboboxButton className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
           <ChevronUpDownIcon
@@ -116,7 +121,7 @@ export const CitySelector = () => {
             {filteredCities.map((city) => (
               <ComboboxOption
                 key={"city-" + city.value}
-                value={city}
+                value={city.name}
                 className={({ focus }) =>
                   classNames(
                     "relative cursor-default select-none py-2 pl-8 pr-4",

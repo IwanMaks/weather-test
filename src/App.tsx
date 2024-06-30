@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "./store/store";
 import { Loading } from "./components/Loading";
 import { ErrorState } from "./components/ErrorState";
+import { SavedCities } from "./components/SavedCities";
 
 export const App = () => {
   const status = useSelector((state: RootState) => state.weather.status);
@@ -29,6 +30,7 @@ export const App = () => {
         <>
           <WeatherCard />
           <HoursList />
+          <SavedCities />
         </>
       );
     }

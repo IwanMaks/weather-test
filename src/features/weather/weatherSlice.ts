@@ -3,8 +3,6 @@ import { getWeatherByCity } from "@/api/weatherApi";
 import { WeatherState, WeatherData, AsyncThunkConfig } from "./weatherTypes";
 
 const initialState: WeatherState = {
-  cities: [],
-  currentCity: "",
   weatherData: {},
   status: "idle",
   error: null,
@@ -26,14 +24,8 @@ const weatherSlice = createSlice({
   name: "weather",
   initialState,
   reducers: {
-    addCity: (state, action: PayloadAction<string>) => {
-      state.cities.push(action.payload);
-    },
-    removeCity: (state, action: PayloadAction<string>) => {
-      state.cities = state.cities.filter((city) => city !== action.payload);
-    },
-    setCurrentCity: (state, action: PayloadAction<string>) => {
-      state.currentCity = action.payload;
+    log: (state, action: PayloadAction<string>) => {
+      console.log("sss");
     },
   },
   extraReducers: (builder) => {
@@ -51,7 +43,5 @@ const weatherSlice = createSlice({
       });
   },
 });
-
-export const { addCity, removeCity, setCurrentCity } = weatherSlice.actions;
 
 export default weatherSlice.reducer;

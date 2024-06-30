@@ -66,8 +66,6 @@ export interface HoursListItemType {
 }
 
 export interface WeatherState {
-  cities: string[];
-  currentCity: string;
   weatherData: { [key: string]: WeatherData };
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;

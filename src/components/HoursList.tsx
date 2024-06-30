@@ -4,7 +4,7 @@ import { HoursListItem } from "./HoursListItem";
 
 export const HoursList = () => {
   const weatherData = useSelector((state: RootState) => state.weather.weatherData);
-  const currentCity = useSelector((state: RootState) => state.weather.currentCity);
+  const currentCity = useSelector((state: RootState) => state.cities.currentCity);
 
   return (
     <ul className="w-full flex items-stretch space-x-5 overflow-auto p-4 shadow-md rounded-lg bg-white">

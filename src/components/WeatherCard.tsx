@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import Thermometer from "@/assets/thermometer.svg?react";
 import Rain from "@/assets/rain.svg?react";
@@ -6,10 +6,14 @@ import Pressure from "@/assets/pressure.svg?react";
 import Wind from "@/assets/wind.svg?react";
 import { Stat } from "./Stat";
 import { HPaToMMHg, weatherIcon, windDirection } from "@/appConstants";
+import { StarIcon } from "@heroicons/react/20/solid";
+import { addCity, removeCity } from "@/features/cities/citiesSlice";
 
 export const WeatherCard = () => {
+  const dispatch = useDispatch<any>();
   const weatherData = useSelector((state: RootState) => state.weather.weatherData);
-  const currentCity = useSelector((state: RootState) => state.weather.currentCity);
+  const currentCity = useSelector((state: RootState) => state.cities.currentCity);
+  const savedCities = useSelector((state: RootState) => state.cities.savedCities);
 
   return (
     <div className="flex w-full items-stretch justify-between space-x-10">
@@ -29,7 +33,28 @@ export const WeatherCard = () => {
               <p className="text-gray-400 text-lg">
                 Время: {new Date().getHours()}:{new Date().getMinutes()}
               </p>
-              <p className="text-gray-400 text-lg">Город: {currentCity}</p>
+              <div className="flex items-center space-x-2">
+                <p className="text-gray-400 text-lg">Город: {currentCity}</p>
+                {savedCities.includes(currentCity) ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      dispatch(removeCity(currentCity));
+                    }}
+                  >
+                    <StarIcon className="h-5 w-5 text-yellow-400" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      dispatch(addCity(currentCity));
+                    }}
+                  >
+                    <StarIcon className="h-5 w-5 text-gray-400" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           <div className="w-2/3 p-4 rounded-lg shadow-lg bg-white">
