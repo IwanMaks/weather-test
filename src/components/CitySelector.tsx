@@ -14,14 +14,6 @@ import { City } from "@/features/cities/citiesTypes";
 import { AppDispatch, RootState } from "@/store/store";
 import { setCurrentCity } from "@/features/cities/citiesSlice";
 
-const geocodeCoordinates = async (lat: number, lon: number) => {
-  const response = await fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`,
-  );
-  const data = await response.json();
-  return data.address.city;
-};
-
 export const CitySelector = () => {
   const cities = useSelector((state: RootState) => state.cities.cities);
   const activeUnits = useSelector((state: RootState) => state.weather.units);
@@ -29,6 +21,22 @@ export const CitySelector = () => {
   const [query, setQuery] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const [isFirstLoad, setIsFirstLoad] = useState(true);
+
+  const geocodeCoordinates = async (lat: number, lon: number) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`,
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch city name");
+      }
+      const data = await response.json();
+      return data.address.city;
+    } catch (error) {
+      console.error("Geocode error:", error);
+      return null;
+    }
+  };
 
   const handleAddCity = useCallback(
     (city: City) => {
@@ -46,7 +54,6 @@ export const CitySelector = () => {
     if (savedCity) {
       const parsedCity: City = JSON.parse(savedCity);
       dispatch(setCurrentCity(parsedCity.name));
-      dispatch(setCurrentCity(parsedCity.name));
     } else {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -59,15 +66,12 @@ export const CitySelector = () => {
           );
           if (foundCity) {
             dispatch(setCurrentCity(foundCity.name));
-            dispatch(setCurrentCity(foundCity.name));
           } else {
-            dispatch(setCurrentCity(cities[0].name));
             dispatch(setCurrentCity(cities[0].name));
           }
         },
         (error) => {
           console.error(error);
-          dispatch(setCurrentCity(cities[0].name));
           dispatch(setCurrentCity(cities[0].name));
         },
       );

@@ -10,6 +10,7 @@ import Snow from "@/assets/snow.svg?react";
 import { ReactNode } from "react";
 import { unitsToSymbolType } from "./features/weather/weatherTypes";
 
+// Иконки погодных условий в зависимости от иконок с API
 export const weatherIcon: Record<string, ReactNode> = {
   "01d": <Sun className="w-full h-full" />,
   "02d": <CloudySun className="w-full h-full" />,
@@ -32,6 +33,7 @@ export const weatherIcon: Record<string, ReactNode> = {
   "50n": <Mist className="w-full h-full" />,
 };
 
+// Определение направления ветра по его углу
 export const windDirection = (deg: number) => {
   if (deg >= 0 && deg < 45) {
     return "северный";
@@ -54,8 +56,10 @@ export const windDirection = (deg: number) => {
   } else return "";
 };
 
+// Множитель для перевода единиц давления из гига паскалей в мм ртутного столба
 export const HPaToMMHg = 0.75006375541921;
 
+// Массив единиц измерения погоды (метрическая и имперская)
 export const units = [
   {
     id: "1",
@@ -69,6 +73,7 @@ export const units = [
   },
 ];
 
+// Соотнесение единиц измерения с показателями
 export const unitsToSymbol: Record<string, unitsToSymbolType> = {
   metric: {
     temp: "C",

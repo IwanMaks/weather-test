@@ -11,10 +11,12 @@ export const HoursListItem = ({ state }: HoursListItemProps) => {
   const activeUnits = useSelector((state: RootState) => state.weather.units);
 
   const returnWeatherTime = () => {
+    // Возвращает время в формате HH:MM из HH:MM:SS
     return state.dt_txt.split(" ")[1].slice(0, -3);
   };
 
   const returnWeatherDate = () => {
+    //Возвращает дату в формате DD.MM.YYYY из YYYY-MM-DD
     const fullDate = state.dt_txt.split(" ")[0].split("-");
     const year = fullDate[0];
     const month = fullDate[1];
