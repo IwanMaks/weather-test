@@ -8,6 +8,7 @@ import Thunderstorm from "@/assets/thunderstorm.svg?react";
 import Mist from "@/assets/mist.svg?react";
 import Snow from "@/assets/snow.svg?react";
 import { ReactNode } from "react";
+import { unitsToSymbolType } from "./features/weather/weatherTypes";
 
 export const weatherIcon: Record<string, ReactNode> = {
   "01d": <Sun className="w-full h-full" />,
@@ -54,3 +55,27 @@ export const windDirection = (deg: number) => {
 };
 
 export const HPaToMMHg = 0.75006375541921;
+
+export const units = [
+  {
+    id: "1",
+    value: "metric",
+    name: "°C",
+  },
+  {
+    id: "2",
+    value: "imperial",
+    name: "°F",
+  },
+];
+
+export const unitsToSymbol: Record<string, unitsToSymbolType> = {
+  metric: {
+    temp: "C",
+    speed: "м/c",
+  },
+  imperial: {
+    temp: "F",
+    speed: "миля/ч",
+  },
+};

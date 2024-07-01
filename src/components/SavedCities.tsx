@@ -9,6 +9,7 @@ export const SavedCities = () => {
   const dispatch = useDispatch<any>();
   const savedCities = useSelector((state: RootState) => state.cities.savedCities);
   const activeCity = useSelector((state: RootState) => state.cities.currentCity);
+  const activeUnits = useSelector((state: RootState) => state.weather.units);
   const cities = useSelector((state: RootState) => state.cities.cities);
 
   useEffect(() => {
@@ -28,7 +29,7 @@ export const SavedCities = () => {
                 if (activeCity !== city) {
                   const cityObj = cities.find((globalCity) => globalCity.name === city);
                   dispatch(setCurrentCity(city));
-                  dispatch(fetchWeather(city));
+                  dispatch(fetchWeather({ city, units: activeUnits }));
                   if (cityObj) {
                     localStorage.setItem("selectedCity", JSON.stringify(cityObj));
                   }

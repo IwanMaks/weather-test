@@ -4,15 +4,20 @@ import { WeatherState, WeatherData, AsyncThunkConfig } from "./weatherTypes";
 
 const initialState: WeatherState = {
   weatherData: {},
+  units: "metric",
   status: "idle",
   error: null,
 };
 
-export const fetchWeather = createAsyncThunk<WeatherData, string, AsyncThunkConfig>(
+export const fetchWeather = createAsyncThunk<
+  WeatherData,
+  { city: string; units?: string },
+  AsyncThunkConfig
+>(
   "weather/fetchWeather",
-  async (city: string, { rejectWithValue }) => {
+  async ({ city, units = "metric" }: { city: string; units?: string }, { rejectWithValue }) => {
     try {
-      const response = await getWeatherByCity(city);
+      const response = await getWeatherByCity(city, units);
       return response;
     } catch (err) {
       return rejectWithValue("Failed to fetch weather data");
@@ -24,8 +29,8 @@ const weatherSlice = createSlice({
   name: "weather",
   initialState,
   reducers: {
-    log: (state, action: PayloadAction<string>) => {
-      console.log("sss");
+    changeMetric: (state, action: PayloadAction<string>) => {
+      state.units = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -43,5 +48,7 @@ const weatherSlice = createSlice({
       });
   },
 });
+
+export const { changeMetric } = weatherSlice.actions;
 
 export default weatherSlice.reducer;

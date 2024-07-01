@@ -67,8 +67,14 @@ export interface HoursListItemType {
 
 export interface WeatherState {
   weatherData: { [key: string]: WeatherData };
+  units: string;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
+}
+
+export interface unitsToSymbolType {
+  temp: string;
+  speed: string;
 }
 
 export interface AsyncThunkConfig {

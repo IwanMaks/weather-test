@@ -6,6 +6,7 @@ import { RootState } from "./store/store";
 import { Loading } from "./components/Loading";
 import { ErrorState } from "./components/ErrorState";
 import { SavedCities } from "./components/SavedCities";
+import { ChangeUnits } from "./components/ChangeUnits";
 
 export const App = () => {
   const status = useSelector((state: RootState) => state.weather.status);
@@ -41,7 +42,10 @@ export const App = () => {
       <div className="container mx-auto p-4 space-y-10">
         <header className="w-full flex items-center justify-between">
           <h1 className="text-2xl font-medium">Погода</h1>
-          <CitySelector />
+          <div className="flex items-center space-x-4">
+            <ChangeUnits />
+            <CitySelector />
+          </div>
         </header>
         {returnMainPart()}
       </div>

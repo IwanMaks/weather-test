@@ -1,11 +1,15 @@
-import { weatherIcon } from "@/appConstants";
+import { unitsToSymbol, weatherIcon } from "@/appConstants";
 import { HoursListItemType } from "@/features/weather/weatherTypes";
+import { RootState } from "@/store/store";
+import { useSelector } from "react-redux";
 
 interface HoursListItemProps {
   state: HoursListItemType;
 }
 
 export const HoursListItem = ({ state }: HoursListItemProps) => {
+  const activeUnits = useSelector((state: RootState) => state.weather.units);
+
   const returnWeatherTime = () => {
     return state.dt_txt.split(" ")[1].slice(0, -3);
   };
@@ -27,9 +31,11 @@ export const HoursListItem = ({ state }: HoursListItemProps) => {
 
       <div className="my-3">
         <div className="h-12 w-12">{weatherIcon[state.weather[0].icon]}</div>
-        <p className="text-gray-800 text-lg">{Math.floor(state.main.temp)}°</p>
+        <p className="text-gray-800 text-lg">
+          {Math.floor(state.main.temp)}°{unitsToSymbol[activeUnits].temp}
+        </p>
         <p className="text-gray-400 text-base">
-          Ощущается как {Math.floor(state.main.feels_like)}°
+          Ощущается как {Math.floor(state.main.feels_like)}°{unitsToSymbol[activeUnits].temp}
         </p>
       </div>
 

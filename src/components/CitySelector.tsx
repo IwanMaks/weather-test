@@ -24,6 +24,7 @@ const geocodeCoordinates = async (lat: number, lon: number) => {
 
 export const CitySelector = () => {
   const cities = useSelector((state: RootState) => state.cities.cities);
+  const activeUnits = useSelector((state: RootState) => state.weather.units);
   const activeCity = useSelector((state: RootState) => state.cities.currentCity);
   const [query, setQuery] = useState("");
   const dispatch = useDispatch<any>();
@@ -33,7 +34,7 @@ export const CitySelector = () => {
     (city: City) => {
       if (city) {
         dispatch(setCurrentCity(city.name));
-        dispatch(fetchWeather(city.name));
+        dispatch(fetchWeather({ city: city.name, units: activeUnits }));
         localStorage.setItem("selectedCity", JSON.stringify(city));
       }
     },
@@ -102,7 +103,7 @@ export const CitySelector = () => {
         }
       }}
     >
-      <div className="relative mt-1">
+      <div className="relative">
         <ComboboxInput
           className="w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
           onChange={(event) => setQuery(event.target.value)}

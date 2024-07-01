@@ -5,7 +5,7 @@ import Rain from "@/assets/rain.svg?react";
 import Pressure from "@/assets/pressure.svg?react";
 import Wind from "@/assets/wind.svg?react";
 import { Stat } from "./Stat";
-import { HPaToMMHg, weatherIcon, windDirection } from "@/appConstants";
+import { HPaToMMHg, unitsToSymbol, weatherIcon, windDirection } from "@/appConstants";
 import { StarIcon } from "@heroicons/react/20/solid";
 import { addCity, removeCity } from "@/features/cities/citiesSlice";
 
@@ -14,6 +14,7 @@ export const WeatherCard = () => {
   const weatherData = useSelector((state: RootState) => state.weather.weatherData);
   const currentCity = useSelector((state: RootState) => state.cities.currentCity);
   const savedCities = useSelector((state: RootState) => state.cities.savedCities);
+  const activeUnits = useSelector((state: RootState) => state.weather.units);
 
   return (
     <div className="flex w-full items-stretch justify-between space-x-10">
@@ -23,6 +24,7 @@ export const WeatherCard = () => {
             <div className="w-full flex items-center justify-between text-indigo-500">
               <h1 className="text-7xl">
                 {Math.floor(weatherData[currentCity].current.main.temp)}°
+                {unitsToSymbol[activeUnits].temp}
               </h1>
 
               <div className="h-32 w-32">
@@ -62,9 +64,11 @@ export const WeatherCard = () => {
               <Stat
                 icon={<Thermometer className="h-8 w-8" />}
                 label="Температура"
-                value={`${Math.floor(
-                  weatherData[currentCity].current.main.temp,
-                )}° ощущается как ${Math.floor(weatherData[currentCity].current.main.feels_like)}°`}
+                value={`${Math.floor(weatherData[currentCity].current.main.temp)}°${
+                  unitsToSymbol[activeUnits].temp
+                } ощущается как ${Math.floor(weatherData[currentCity].current.main.feels_like)}°${
+                  unitsToSymbol[activeUnits].temp
+                }`}
               />
               <Stat
                 icon={<Pressure className="h-8 w-8" />}
@@ -85,9 +89,9 @@ export const WeatherCard = () => {
               <Stat
                 icon={<Wind className="h-8 w-8" />}
                 label="Ветер"
-                value={`${Math.floor(
-                  weatherData[currentCity].current.wind.speed,
-                )} м/c ${windDirection(weatherData[currentCity].current.wind.deg)}`}
+                value={`${Math.floor(weatherData[currentCity].current.wind.speed)} ${
+                  unitsToSymbol[activeUnits].speed
+                } ${windDirection(weatherData[currentCity].current.wind.deg)}`}
               />
             </div>
           </div>
