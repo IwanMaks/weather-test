@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { getWeatherByCity } from "@/api/weatherApi";
-import { WeatherState, WeatherData, AsyncThunkConfig } from "./weatherTypes";
+import { WeatherState, WeatherData } from "./weatherTypes";
+import { AppDispatch, RootState } from "@/store/store";
 
 const initialState: WeatherState = {
   weatherData: {},
@@ -12,7 +13,14 @@ const initialState: WeatherState = {
 export const fetchWeather = createAsyncThunk<
   WeatherData,
   { city: string; units?: string },
-  AsyncThunkConfig
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    extraArgument: {
+      loading: string;
+      CurrentRequestId: string | undefined;
+    };
+  }
 >(
   "weather/fetchWeather",
   async ({ city, units = "metric" }: { city: string; units?: string }, { rejectWithValue }) => {

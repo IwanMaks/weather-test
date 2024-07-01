@@ -1,12 +1,12 @@
 import { removeCity, setCurrentCity, setSavedCities } from "@/features/cities/citiesSlice";
 import { fetchWeather } from "@/features/weather/weatherSlice";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export const SavedCities = () => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch<AppDispatch>();
   const savedCities = useSelector((state: RootState) => state.cities.savedCities);
   const activeCity = useSelector((state: RootState) => state.cities.currentCity);
   const activeUnits = useSelector((state: RootState) => state.weather.units);
@@ -15,7 +15,7 @@ export const SavedCities = () => {
   useEffect(() => {
     const parsedSavedCities: string[] = JSON.parse(localStorage.getItem("savedCities") || "[]");
     dispatch(setSavedCities(parsedSavedCities));
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className="w-full">

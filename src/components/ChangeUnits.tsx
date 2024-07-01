@@ -1,12 +1,12 @@
 import { units } from "@/appConstants";
 import { changeMetric, fetchWeather } from "@/features/weather/weatherSlice";
 import { classNames } from "@/helpers/utils";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { Radio, RadioGroup } from "@headlessui/react";
 import { useDispatch, useSelector } from "react-redux";
 
 export const ChangeUnits = () => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch<AppDispatch>();
   const activeUnits = useSelector((state: RootState) => state.weather.units);
   const currentCity = useSelector((state: RootState) => state.cities.currentCity);
 

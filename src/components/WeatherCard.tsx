@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import Thermometer from "@/assets/thermometer.svg?react";
 import Rain from "@/assets/rain.svg?react";
 import Pressure from "@/assets/pressure.svg?react";
@@ -10,7 +10,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { addCity, removeCity } from "@/features/cities/citiesSlice";
 
 export const WeatherCard = () => {
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch<AppDispatch>();
   const weatherData = useSelector((state: RootState) => state.weather.weatherData);
   const currentCity = useSelector((state: RootState) => state.cities.currentCity);
   const savedCities = useSelector((state: RootState) => state.cities.savedCities);

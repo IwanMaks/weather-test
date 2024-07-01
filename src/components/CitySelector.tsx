@@ -11,7 +11,7 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { classNames } from "@/helpers/utils";
 import { City } from "@/features/cities/citiesTypes";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { setCurrentCity } from "@/features/cities/citiesSlice";
 
 const geocodeCoordinates = async (lat: number, lon: number) => {
@@ -27,7 +27,7 @@ export const CitySelector = () => {
   const activeUnits = useSelector((state: RootState) => state.weather.units);
   const activeCity = useSelector((state: RootState) => state.cities.currentCity);
   const [query, setQuery] = useState("");
-  const dispatch = useDispatch<any>();
+  const dispatch = useDispatch<AppDispatch>();
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const handleAddCity = useCallback(
@@ -38,7 +38,7 @@ export const CitySelector = () => {
         localStorage.setItem("selectedCity", JSON.stringify(city));
       }
     },
-    [dispatch],
+    [dispatch, activeUnits],
   );
 
   useEffect(() => {
