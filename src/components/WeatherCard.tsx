@@ -17,10 +17,10 @@ export const WeatherCard = () => {
   const activeUnits = useSelector((state: RootState) => state.weather.units);
 
   return (
-    <div className="flex w-full items-stretch justify-between space-x-10">
+    <div className="flex w-full flex-wrap lg:flex-nowrap items-stretch justify-between space-y-10 lg:space-y-0 lg:space-x-10">
       {currentCity && weatherData[currentCity] ? (
         <>
-          <div className="w-1/3 p-4 rounded-lg shadow-lg flex flex-col justify-center bg-white">
+          <div className="lg:w-1/3 w-full p-4 rounded-lg shadow-lg flex flex-col justify-center bg-white">
             <div className="w-full flex items-center justify-between text-indigo-500">
               <h1 className="text-7xl">
                 {Math.floor(weatherData[currentCity].current.main.temp)}°
@@ -59,8 +59,8 @@ export const WeatherCard = () => {
               </div>
             </div>
           </div>
-          <div className="w-2/3 p-4 rounded-lg shadow-lg bg-white">
-            <div className="grid grid-cols-[60px_minmax(0,_1fr)_minmax(0,_3fr)] items-center gap-y-6">
+          <div className="lg:w-2/3 w-full p-4 rounded-lg shadow-lg bg-white">
+            <div className="grid grid-cols-[60px_minmax(0,_1fr)] sm:grid-cols-[60px_minmax(0,_1fr)_minmax(0,_3fr)] items-center gap-y-6">
               <Stat
                 icon={<Thermometer className="h-8 w-8" />}
                 label="Температура"

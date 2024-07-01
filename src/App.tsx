@@ -43,10 +43,15 @@ export const App = () => {
         <header className="w-full flex items-center justify-between">
           <h1 className="text-2xl font-medium">Погода</h1>
           <div className="flex items-center space-x-4">
-            <ChangeUnits />
+            <div className="hidden sm:block">
+              <ChangeUnits />
+            </div>
             <CitySelector />
           </div>
         </header>
+        <div className="block sm:hidden">
+          <ChangeUnits />
+        </div>
         {returnMainPart()}
       </div>
     </div>

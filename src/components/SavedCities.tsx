@@ -21,7 +21,7 @@ export const SavedCities = () => {
     <div className="w-full">
       <h1 className="text-xl text-gray-800 font-medium mb-3">Сохранённые города</h1>
       {savedCities.length > 0 ? (
-        <div className="grid grid-cols-6 gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
           {savedCities.map((city) => (
             <button
               key={"saved-city-" + city}
